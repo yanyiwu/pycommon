@@ -1,10 +1,12 @@
 import os
 
-def get_files(dir_path):
-    return_list = list()
+def get_files(dir_path, suffixes = ""):
+    ret_list = []
     for root, dirs, files in os.walk(dir_path):
-        return_list +=  map(lambda x:os.path.join(root, x), files)
-    return return_list
+        for fpath in files:
+            if fpath.endswith(suffixes):
+                ret_list.append(os.path.join(root, fpath))
+    return ret_list
 
 
 def dump(file_content, file_path):
@@ -34,3 +36,5 @@ def get_relative_path(abspath, absprefix):
     else:
         return None
 
+if __name__ == "__main__":
+    print get_files(".", ".py")
