@@ -36,5 +36,20 @@ def get_relative_path(abspath, absprefix):
     else:
         return None
 
+
+def dicts_merge(*dicts):
+    ret_dict = {}
+    for _dict in dicts:
+        for key in _dict:
+            if key not in ret_dict:
+                ret_dict[key] = _dict[key]
+            else:
+                if type(ret_dict[key]) == dict and type(_dict[key]) == dict:
+                    ret_dict[key] = dicts_merge(ret_dict[key], _dict[key])
+                else:
+                    ret_dict[key] += _dict[key] # this += maybe throw exception
+    return ret_dict
+
 if __name__ == "__main__":
-    print get_files(".", ".py")
+    #print get_files(".", ".py")
+    print dicts_merge({1:111}, {"h1":1,"h3":2,"h4":{"s1":1,"s2":2}},{"h1":2,"h3":3,"h4":{"s1":2, "s2":3,"s3":5}})
