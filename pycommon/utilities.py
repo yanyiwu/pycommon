@@ -1,4 +1,5 @@
 import os
+import time, datetime
 
 def get_files(dir_path, suffixes = ""):
     ret_list = []
@@ -50,6 +51,12 @@ def dicts_merge(*dicts):
                     ret_dict[key] += _dict[key] # this += maybe throw exception
     return ret_dict
 
+def str2datetime(tstr, pattern):
+    t = time.strptime(tstr, pattern)
+    return datetime.datetime(* t[:6])
+
+
 if __name__ == "__main__":
     #print get_files(".", ".py")
     print dicts_merge({1:111}, {"h1":1,"h3":2,"h4":{"s1":1,"s2":2}},{"h1":2,"h3":3,"h4":{"s1":2, "s2":3,"s3":5}})
+    print str2datetime("20130401", "%Y%m%d")
