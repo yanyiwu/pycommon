@@ -56,7 +56,26 @@ def str2datetime(tstr, pattern):
     return datetime.datetime(* t[:6])
 
 
+def get_datetime_list(day_pattern_left, day_pattern_right):
+    _list = []
+    day_left = str2datetime(day_pattern_left, "%Y%m%d").date()
+    day_right = str2datetime(day_pattern_right, "%Y%m%d").date()
+    while day_left <= day_right:
+        _list.append(day_left)
+        day_left = day_left + datetime.timedelta(1)
+    return _list
+
+import urllib2
+#import chardet
+def url_decode(url_str, src_enc, des_enc = "utf-8"):
+    _str = urllib2.unquote(url_str)
+    #src_enc = chardet.detect(_str)["encoding"]
+    return _str.decode(src_enc).encode(des_enc)
+
+
 if __name__ == "__main__":
     #print get_files(".", ".py")
     print dicts_merge({1:111}, {"h1":1,"h3":2,"h4":{"s1":1,"s2":2}},{"h1":2,"h3":3,"h4":{"s1":2, "s2":3,"s3":5}})
     print str2datetime("20130401", "%Y%m%d")
+    string = "%BD%F0%CE%C4%D0%C2%BF%BC+"
+    print url_decode(string, "gbk", "utf8")
