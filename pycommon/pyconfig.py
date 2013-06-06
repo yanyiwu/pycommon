@@ -48,7 +48,19 @@ class Config:
         self._is_initted = True
         return True
 
+    def get(self, key):
+        if not self._is_initted:
+            logger.critical("config not initted.")
+            return None
+        if key in self._config:
+            return self._config[key]
+        else:
+            logger.error("key[%s] is not in config" %key)
+            return None
+
+
 if __name__ == "__main__":
     config = Config()
     config.init("1.conf")
     config.display()
+    print config.get("a")
