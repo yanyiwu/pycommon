@@ -1,5 +1,13 @@
 import os
 import time, datetime
+import sys
+
+def get_cur_funcname():
+    try: 
+        raise Exception
+    except:
+        f = sys.exc_info()[2].tb_frame.f_back
+    return f.f_code.co_name
 
 def get_files(dir_path, suffixes = ""):
     ret_list = []
@@ -79,3 +87,7 @@ if __name__ == "__main__":
     print str2datetime("20130401", "%Y%m%d")
     string = "%BD%F0%CE%C4%D0%C2%BF%BC+"
     print url_decode(string, "gbk", "utf8")
+    def testfunc():
+        print get_cur_funcname()
+    testfunc()
+
