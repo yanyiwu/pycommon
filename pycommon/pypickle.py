@@ -15,6 +15,8 @@ def pickle_dump(obj, file_path, rewrite=True):
 
 def pickle_load(file_path):
     #with open
+    if not os.path.exists(file_path):
+        return None
     with open(file_path, "rb") as fp:
         return pickle.load(fp)
     pass
