@@ -20,7 +20,7 @@ def get_files(dir_path, suffixes = ""):
 
 def dump(file_content, file_path):
     _dir = os.path.dirname(file_path)
-    if not os.path.exists(_dir):
+    if _dir and not os.path.exists(_dir):
         os.makedirs(_dir)
     with open(file_path, 'w') as fout:
         fout.write(file_content)
