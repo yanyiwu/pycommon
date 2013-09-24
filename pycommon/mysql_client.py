@@ -11,7 +11,7 @@ class MysqlClient:
         self.user = user
         self.passwd = passwd
         self.db = db
-        self.wait_seconds = 60
+        self.__SLEEP_TIME = 60
 
         self.__connect()
             
@@ -28,15 +28,14 @@ class MysqlClient:
                 return
             except Exception,e:
                 logger.critical('MySQLdb.Connection failed! error:[%s]' %e)
-            time.sleep(self.wait_seconds)
+            time.sleep(self.__SLEEP_TIME)
 
     def insert_kvs(self, _table_name, _key_list, _value_list):
         keys_str = ','.join(map(lambda x : '`%s`' %x, _key_list))
         values_str = ','.join(map(lambda x : '"%s"' %x, _value_list))
 
         sql = 'insert into %s (%s) values (%s)' %(_table_name, keys_str, values_str)
-        self.insert_sql(sql)
-        logger.debug('insertdb sql[%s] finished.' %sql)
+        return self.insert_sql(sql)
 
     def update_kvs(self, _table_name, _key_list, _value_list, _where_keys = [], _where_vals = []):
         #UPDATE persondata SET ageage=age*2, ageage=age+1; 
