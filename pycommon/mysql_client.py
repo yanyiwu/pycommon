@@ -35,17 +35,28 @@ class MysqlClient:
         values_str = ','.join(map(lambda x : '"%s"' %x, _value_list))
 
         sql = 'insert into %s (%s) values (%s)' %(_table_name, keys_str, values_str)
-        return self.insert_sql(sql)
+        ret = self.insert_sql(sql)
+        if __debug__:
+            logger.debug('sql[%s] finished.' %sql)
+        return ret
 
     def update_kvs(self, _table_name, _key_list, _value_list, _where_keys = [], _where_vals = []):
         #UPDATE persondata SET ageage=age*2, ageage=age+1; 
         set_sql = ', '.join(map(lambda x, y: "%s='%s'" %(x, y), _key_list, _value_list))
         sql = "update %s set %s" %(_table_name, set_sql)
         if _where_keys and _where_vals:
-            sql += " where " + ', '.join(map(lambda x, y: "%s='%s'" %(x, y), _where_keys, _where_vals))
+            sql += " where " + ' and '.join(map(lambda x, y: "%s='%s'" %(x, y), _where_keys, _where_vals))
         self.insert_sql(sql)
-        logger.debug('sql[%s] finished.' %sql)
+        if __debug__:
+            logger.debug('sql[%s] finished.' %sql)
 
+    def delete_kvs(self, _table_name, _where_keys , _where_vals ):
+        sql = "delete from %s" %(_table_name)
+        sql += " where " + ' and '.join(map(lambda x, y: "%s='%s'" %(x, y), _where_keys, _where_vals))
+        ret = self.insert_sql(sql)
+        if __debug__:
+            logger.debug('sql[%s] finished.' %sql)
+        return ret
 
     def insert_sql(self, sql):
         try:
@@ -56,14 +67,14 @@ class MysqlClient:
 
         cursor = self.conn.cursor()
         try:
-            cursor.execute(sql)
+            retn = cursor.execute(sql)
             cursor.close()
             self.conn.commit()
-            return True
+            return retn
         except Exception, e:
             self.conn.rollback() 
             logger.error("insert sql[%s] failed, error info[%s]" %(sql, e))
-            return False      
+            return 0      
 
     def select_sql(self,sql):
         try:
@@ -78,6 +89,7 @@ class MysqlClient:
                 return cursor.fetchall()
             else:
                 logger.error("%s:fetchall return 0 " %sql)
+                return None
         except Exception, e:
             self.conn.rollback() 
             logger.error("select sql[%s] failed, error info[%s]" %(sql, e))
@@ -96,6 +108,7 @@ class MysqlClient:
                 return cursor.fetchall()
             else:
                 logger.error("%s:fetchall return 0 " %sql)
+                return None
         except Exception, e:
             self.conn.rollback() 
             logger.error("select sql[%s] failed, error info[%s]" %(sql, e))
