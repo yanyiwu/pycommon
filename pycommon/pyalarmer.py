@@ -1,6 +1,5 @@
 #-*-coding:utf-8-*-
 import commands
-from pylogger import logger
 class Alarmer:
     def __init__(self,**argv):
         self.__queue=[]
@@ -9,15 +8,15 @@ class Alarmer:
         if 'server' in argv:
             self.__server = argv['server']
         else:
-            logger.critical('[server] error')
+            logging.critical('[server] error')
         if  'emailfrom' in argv:
             self.__from = argv['emailfrom']
         else:
-            logger.critical('[emailfrom] error')
+            logging.critical('[emailfrom] error')
         if 'emailto' in argv:
             self.__to = argv['emailto']
         else:
-            logger.critical('[emailto] error')
+            logging.critical('[emailto] error')
             
 
     def add(self,subject,content,attachment=None):
@@ -40,7 +39,7 @@ class Alarmer:
         
         status,output=commands.getstatusoutput(send_cmd)
         if status:
-            logger.error('_send_mail error:[%s]' %output)
+            logging.error('_send_mail error:[%s]' %output)
         else:
-            logger.info('_send_mail suceeded.')
+            logging.info('_send_mail suceeded.')
 

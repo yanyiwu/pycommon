@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
 import MySQLdb
-from pylogger import logger
 import time
 
 
@@ -27,7 +26,7 @@ class MysqlClient:
                     charset='utf8')
                 return
             except Exception,e:
-                logger.critical('MySQLdb.Connection failed! error:[%s]' %e)
+                logging.critical('MySQLdb.Connection failed! error:[%s]' %e)
             time.sleep(self.__SLEEP_TIME)
 
     def insert_kvs(self, _table_name, _key_list, _value_list):
@@ -37,7 +36,7 @@ class MysqlClient:
         sql = 'insert into %s (%s) values (%s)' %(_table_name, keys_str, values_str)
         ret = self.insert_sql(sql)
         if __debug__:
-            logger.debug('sql[%s] finished.' %sql)
+            logging.debug('sql[%s] finished.' %sql)
         return ret
 
     def update_kvs(self, _table_name, _key_list, _value_list, _where_keys = [], _where_vals = []):
@@ -48,21 +47,21 @@ class MysqlClient:
             sql += " where " + ' and '.join(map(lambda x, y: "%s='%s'" %(x, y), _where_keys, _where_vals))
         self.insert_sql(sql)
         if __debug__:
-            logger.debug('sql[%s] finished.' %sql)
+            logging.debug('sql[%s] finished.' %sql)
 
     def delete_kvs(self, _table_name, _where_keys , _where_vals ):
         sql = "delete from %s" %(_table_name)
         sql += " where " + ' and '.join(map(lambda x, y: "%s='%s'" %(x, y), _where_keys, _where_vals))
         ret = self.insert_sql(sql)
         if __debug__:
-            logger.debug('sql[%s] finished.' %sql)
+            logging.debug('sql[%s] finished.' %sql)
         return ret
 
     def insert_sql(self, sql):
         try:
             self.conn.ping()
         except Exception,e:
-            logger.critical('conn.ping() failed! error:[%s]' %e)
+            logging.critical('conn.ping() failed! error:[%s]' %e)
             self.__connect()
 
         cursor = self.conn.cursor()
@@ -73,14 +72,14 @@ class MysqlClient:
             return retn
         except Exception, e:
             self.conn.rollback() 
-            logger.error("insert sql[%s] failed, error info[%s]" %(sql, e))
+            logging.error("insert sql[%s] failed, error info[%s]" %(sql, e))
             return 0      
 
     def select_sql(self,sql):
         try:
             self.conn.ping()
         except Exception,e:
-            logger.critical('conn.ping() failed! error:[%s]' %e)
+            logging.critical('conn.ping() failed! error:[%s]' %e)
             self.__connect()
         cursor = self.conn.cursor()
         try:
@@ -88,18 +87,18 @@ class MysqlClient:
             if ret:
                 return cursor.fetchall()
             else:
-                logger.error("%s:fetchall return 0 " %sql)
+                logging.error("%s:fetchall return 0 " %sql)
                 return None
         except Exception, e:
             self.conn.rollback() 
-            logger.error("select sql[%s] failed, error info[%s]" %(sql, e))
+            logging.error("select sql[%s] failed, error info[%s]" %(sql, e))
             return False
 
     def select_dict_sql(self,sql):
         try:
             self.conn.ping()
         except Exception,e:
-            logger.critical('conn.ping() failed! error:[%s]' %e)
+            logging.critical('conn.ping() failed! error:[%s]' %e)
             self.__connect()
         cursor = self.conn.cursor(MySQLdb.cursors.DictCursor)
         try:
@@ -107,11 +106,11 @@ class MysqlClient:
             if ret:
                 return cursor.fetchall()
             else:
-                logger.error("%s:fetchall return 0 " %sql)
+                logging.error("%s:fetchall return 0 " %sql)
                 return None
         except Exception, e:
             self.conn.rollback() 
-            logger.error("select sql[%s] failed, error info[%s]" %(sql, e))
+            logging.error("select sql[%s] failed, error info[%s]" %(sql, e))
             return False
         
            

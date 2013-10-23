@@ -1,4 +1,3 @@
-from pylogger import logger
 
 class Config:
     def __init__(self):
@@ -27,12 +26,12 @@ class Config:
 
     def init(self, filepath):
         if self._is_initted:
-            logger.critical("already initted.")
+            logging.critical("already initted.")
             return False
         try:
             fin = open(filepath, "r")
         except Exception as e:
-            logger.critical("open file[%s] failed. error[%s]" %(filepath, e))
+            logging.critical("open file[%s] failed. error[%s]" %(filepath, e))
             return False
         for i, rawline in enumerate(fin):
             line = self._strip_comments(rawline)
@@ -42,7 +41,7 @@ class Config:
             if key and key not in self._config:
                 self._config[key] = value
             else:
-                logger.critical("line %s: [%s] illegal or already configured before this line." %(i, line))
+                logging.critical("line %s: [%s] illegal or already configured before this line." %(i, line))
                 return False
 
         self._is_initted = True
@@ -50,12 +49,12 @@ class Config:
 
     def get(self, key):
         if not self._is_initted:
-            logger.critical("config not initted.")
+            logging.critical("config not initted.")
             return None
         if key in self._config:
             return self._config[key]
         else:
-            logger.error("key[%s] is not in config" %key)
+            logging.error("key[%s] is not in config" %key)
             return None
 
 

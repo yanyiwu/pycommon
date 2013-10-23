@@ -1,8 +1,6 @@
 #coding:utf8
 from xml.etree import ElementTree
 
-from tools import logger
-
 class XMLParser:
     def __init__(self, node_name, tag_name_list):
         self.root = None
@@ -15,7 +13,7 @@ class XMLParser:
             node_list = self.root.getiterator(self.node_name)
             return map(lambda x:self._parse_node(x), node_list)
         else:
-            logger.critical("self.root is none")
+            logging.critical("self.root is none")
             return None
     def parse(self,xml_file_path):
         self._fromfile(xml_file_path)
