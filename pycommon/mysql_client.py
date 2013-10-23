@@ -2,6 +2,7 @@
 import sys
 import MySQLdb
 import time
+import logging
 
 
 class MysqlClient:
