@@ -35,7 +35,7 @@ class MysqlClient:
         values_str = ','.join(map(lambda x : '"%s"' %x, _value_list))
 
         sql = 'insert into %s (%s) values (%s)' %(_table_name, keys_str, values_str)
-        ret = self.insert_sql(sql)
+        ret = self.execute_sql(sql)
         if __debug__:
             logging.debug('sql[%s] finished.' %sql)
         return ret
@@ -46,19 +46,20 @@ class MysqlClient:
         sql = "update %s set %s" %(_table_name, set_sql)
         if _where_keys and _where_vals:
             sql += " where " + ' and '.join(map(lambda x, y: "%s='%s'" %(x, y), _where_keys, _where_vals))
-        self.insert_sql(sql)
+        retn = self.execute_sql(sql)
         if __debug__:
             logging.debug('sql[%s] finished.' %sql)
+        return retn
 
     def delete_kvs(self, _table_name, _where_keys , _where_vals ):
         sql = "delete from %s" %(_table_name)
         sql += " where " + ' and '.join(map(lambda x, y: "%s='%s'" %(x, y), _where_keys, _where_vals))
-        ret = self.insert_sql(sql)
+        ret = self.execute_sql(sql)
         if __debug__:
             logging.debug('sql[%s] finished.' %sql)
         return ret
 
-    def insert_sql(self, sql):
+    def execute_sql(self, sql):
         try:
             self.conn.ping()
         except Exception,e:
@@ -67,7 +68,8 @@ class MysqlClient:
 
         cursor = self.conn.cursor()
         try:
-            retn = cursor.execute(sql)
+            cursor.execute(sql)
+            retn = cursor.rowcount
             cursor.close()
             self.conn.commit()
             return retn
@@ -119,6 +121,5 @@ class MysqlClient:
         self.conn.close()
 if __name__ == '__main__':
     client = MysqlClient("192.168.1.175", "wyy", "wyy123", "pingluntuan_log");
-    #client.insert_sql("insert into req_analysis_test (day,req_sum) values ('2013-3-1',10)")
     client.update_kvs("req_analysis_test", ["req_sum"], ["22"], ["day"], ["20130301"])
     pass
