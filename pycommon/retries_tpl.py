@@ -27,12 +27,16 @@ class MyException(Exception):
     pass
  
 n = 0
-@retries(3, hook=example_exc_handler)
-def retry_me():
-    global n
-    n += 1
-    #raise MyException('Foobar')
-    a = int("a")
+class A:
+    @retries(3, hook=example_exc_handler)
+    def retry_me(self):
+        global n
+        n += 1
+        #raise MyException('Foobar')
+        a = int("a")
+    
+    def run(self):
+        self.retry_me()
  
 def test_retries():
     try:
@@ -52,8 +56,9 @@ def test_retries2():
 
 
 if __name__ == "__main__":
+    a = A()
     try:
-        retry_me()
+        a.retry_me()
     except Exception as err:
         print "hehe"
     print n

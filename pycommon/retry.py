@@ -24,6 +24,7 @@
 import sys
 from time import sleep
  
+import logging
  
 def example_exc_handler(tries_remaining, exception, delay):
     """Example exception handler; prints a warning to stderr.
@@ -31,7 +32,7 @@ def example_exc_handler(tries_remaining, exception, delay):
     tries_remaining: The number of tries remaining.
     exception: The exception instance which was raised.
     """
-    print >> sys.stderr, "Caught '%s', %d tries remaining, sleeping for %s seconds" % (exception, tries_remaining, delay)
+    logging.error("Caught '%s', %d tries remaining, sleeping for %s seconds" % (exception, tries_remaining, delay))
  
  
 def retries(max_tries, delay=1, backoff=2, exceptions=(Exception,), hook=None):
