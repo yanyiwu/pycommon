@@ -45,11 +45,12 @@ def send_mail(user, passwd, to_list, sub, content):
         
 def wait_process_exit(pattern):
     while True:
-        ps_string = os.popen('ps aux | grep %s | grep -v grep' %pattern,'r').read()
+        ps_string = os.popen('ps aux | grep "%s" | grep -v grep' %pattern,'r').read()
         ps_strings = ps_string.strip().split('\n')
         if len(ps_strings) < 2:
             return
         else:
+            logging.debug("into sleep[%d]" %TIME_SLEEP)
             time.sleep(TIME_SLEEP)
 
 def run(pattern, user, passwd):
