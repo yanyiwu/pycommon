@@ -3,6 +3,9 @@ import os
 import time
 import smtplib
 import logging
+import socket
+import fcntl
+import struct
 from email.mime.text import MIMEText
 #from email.MIMEText import MIMEText
 
@@ -11,9 +14,16 @@ MAIL_POSTFIX = "163.com"
 
 TIME_SLEEP = 10
 
-SUBJECT = "process quit , 88 "
-CONTENT = "process quit , 88 "
-MAIL_TO_LIST = ["wuyanyi09@gmail.com"]
+
+#get_ip_address('lo')
+#get_ip_address('eth0')
+def get_ip_address(ifname = "eth0"):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(),
+        0x8915,  # SIOCGIFADDR
+        struct.pack('256s', ifname[:15])
+    )[20:24])
 
 def send_mail(user, passwd, to_list, sub, content):
     me = user + "<" + user + "@" + MAIL_POSTFIX + ">"
@@ -45,6 +55,9 @@ def wait_process_exit(pid):
             time.sleep(TIME_SLEEP)
 
 def run(pid, user, passwd):
+    SUBJECT = get_ip_address()
+    CONTENT = "process quit , 88 "
+    MAIL_TO_LIST = ["wuyanyi09@gmail.com"]
     wait_process_exit(pid)
     send_mail(user, passwd, MAIL_TO_LIST, SUBJECT, CONTENT)
  
