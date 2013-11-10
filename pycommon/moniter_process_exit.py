@@ -43,28 +43,26 @@ def send_mail(user, passwd, to_list, sub, content):
     logging.info("send mail %s [%s] [%s]" %(to_list, sub, content))
     return True
         
-def wait_process_exit(pid):
-    if isinstance(pid, int):
-        pid = str(pid)
+def wait_process_exit(pattern):
     while True:
-        ps_string = os.popen('ps -p %s' %pid).read()
+        ps_string = os.popen('ps aux | grep %s | grep -v grep' %pattern,'r').read()
         ps_strings = ps_string.strip().split('\n')
         if len(ps_strings) < 2:
             return
         else:
             time.sleep(TIME_SLEEP)
 
-def run(pid, user, passwd):
+def run(pattern, user, passwd):
     SUBJECT = get_ip_address()
     CONTENT = "process quit , 88 "
     MAIL_TO_LIST = ["wuyanyi09@gmail.com"]
-    wait_process_exit(pid)
+    wait_process_exit(pattern)
     send_mail(user, passwd, MAIL_TO_LIST, SUBJECT, CONTENT)
  
 if __name__ == '__main__':
     logging.basicConfig(format = "[%(asctime)s] %(filename)s[line:%(lineno)d] : [%(levelname)s] %(message)s", level = logging.DEBUG)
     if len(sys.argv) < 4:
-        print >> sys.stderr, "usage: %s <pid> <user> <passwd>" %sys.argv[0]
+        print >> sys.stderr, "usage: %s <grep_pattern> <user> <passwd>" %sys.argv[0]
         exit(1)
     run(sys.argv[1], sys.argv[2], sys.argv[3])
 
