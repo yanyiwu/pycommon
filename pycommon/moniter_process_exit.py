@@ -7,8 +7,6 @@ from email.mime.text import MIMEText
 #from email.MIMEText import MIMEText
 
 MAIL_HOST = "smtp.163.com"
-#user = "zeeeitch"
-#passwd = ""
 MAIL_POSTFIX = "163.com"
 
 TIME_SLEEP = 10
