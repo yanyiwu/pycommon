@@ -36,8 +36,6 @@ class MysqlClient:
 
         sql = 'insert into %s (%s) values (%s)' %(_table_name, keys_str, values_str)
         ret = self.execute_sql(sql)
-        if __debug__:
-            logging.debug('sql[%s] finished.' %sql)
         return ret
 
     def update_kvs(self, _table_name, _key_list, _value_list, _where_keys = [], _where_vals = []):
@@ -47,16 +45,12 @@ class MysqlClient:
         if _where_keys and _where_vals:
             sql += " where " + ' and '.join(map(lambda x, y: "%s='%s'" %(x, y), _where_keys, _where_vals))
         retn = self.execute_sql(sql)
-        if __debug__:
-            logging.debug('sql[%s] finished.' %sql)
         return retn
 
     def delete_kvs(self, _table_name, _where_keys , _where_vals ):
         sql = "delete from %s" %(_table_name)
         sql += " where " + ' and '.join(map(lambda x, y: "%s='%s'" %(x, y), _where_keys, _where_vals))
         ret = self.execute_sql(sql)
-        if __debug__:
-            logging.debug('sql[%s] finished.' %sql)
         return ret
 
     def execute_sql(self, sql):
