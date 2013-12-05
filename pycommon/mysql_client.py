@@ -84,7 +84,7 @@ class MysqlClient:
             if ret:
                 return cursor.fetchall()
             else:
-                logging.error("%s:fetchall return 0 " %sql)
+                logging.debug("%s:fetchall return 0 " %sql)
                 return None
         except Exception, e:
             self.conn.rollback() 
@@ -103,7 +103,7 @@ class MysqlClient:
             if ret:
                 return cursor.fetchall()
             else:
-                logging.error("%s:fetchall return 0 " %sql)
+                logging.debug("%s:fetchall return 0 " %sql)
                 return None
         except Exception, e:
             self.conn.rollback() 
