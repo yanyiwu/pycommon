@@ -81,12 +81,12 @@ class MysqlClient:
         cursor = self.conn.cursor()
         try:
             ret = cursor.execute(sql)
+            self.conn.commit()
             if not ret:
                 logging.debug("sql[%s] return empty" %sql)
                 cursor.close()
                 return None
             res = cursor.fetchall()
-            self.conn.commit()
             cursor.close()
             return res
         except Exception, e:
