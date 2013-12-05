@@ -18,7 +18,7 @@ class MysqlClient:
     def __connect(self):
         while True:
             try:
-                self.conn = MySQLdb.Connection(
+                self.conn = MySQLdb.connect(
                     host=self.mysql_ip, 
                     user=self.user, 
                     passwd= self.passwd,
@@ -80,37 +80,20 @@ class MysqlClient:
             self.__connect()
         cursor = self.conn.cursor()
         try:
-            ret=cursor.execute(sql)
-            if ret:
-                return cursor.fetchall()
-            else:
-                logging.debug("%s:fetchall return 0 " %sql)
+            ret = cursor.execute(sql)
+            if not ret:
+                logging.debug("sql[%s] return empty" %sql)
+                cursor.close()
                 return None
+            res = cursor.fetchall()
+            self.conn.commit()
+            cursor.close()
+            return res
         except Exception, e:
             self.conn.rollback() 
             logging.error("select sql[%s] failed, error info[%s]" %(sql, e))
             return False
 
-    def select_dict_sql(self,sql):
-        try:
-            self.conn.ping()
-        except Exception,e:
-            logging.critical('conn.ping() failed! error:[%s]' %e)
-            self.__connect()
-        cursor = self.conn.cursor(MySQLdb.cursors.DictCursor)
-        try:
-            ret=cursor.execute(sql)
-            if ret:
-                return cursor.fetchall()
-            else:
-                logging.debug("%s:fetchall return 0 " %sql)
-                return None
-        except Exception, e:
-            self.conn.rollback() 
-            logging.error("select sql[%s] failed, error info[%s]" %(sql, e))
-            return False
-        
-           
     def close(self):
         self.conn.close()
 if __name__ == '__main__':
