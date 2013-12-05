@@ -114,6 +114,4 @@ class MysqlClient:
     def close(self):
         self.conn.close()
 if __name__ == '__main__':
-    client = MysqlClient("192.168.1.175", "wyy", "wyy123", "pingluntuan_log");
-    client.update_kvs("req_analysis_test", ["req_sum"], ["22"], ["day"], ["20130301"])
     pass
