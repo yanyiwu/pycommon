@@ -39,17 +39,16 @@ class MysqlClient:
         return ret
 
     def update_kvs(self, _table_name, _key_list, _value_list, _where_keys = [], _where_vals = []):
-        #UPDATE persondata SET ageage=age*2, ageage=age+1; 
-        set_sql = ', '.join(map(lambda x, y: "%s='%s'" %(x, y), _key_list, _value_list))
+        set_sql = ', '.join(map(lambda x, y: "%s='%s'" %(x, y) if isinstance(y, str)else "%s=%s" %(x, y), _key_list, _value_list))
         sql = "update %s set %s" %(_table_name, set_sql)
         if _where_keys and _where_vals:
-            sql += " where " + ' and '.join(map(lambda x, y: "%s='%s'" %(x, y), _where_keys, _where_vals))
+            sql += " where " + ' and '.join(map(lambda x, y: "%s='%s'" %(x, y) if isinstance(y, str) else "%s=%s" %(x, y), _where_keys, _where_vals))
         retn = self.execute_sql(sql)
         return retn
 
     def delete_kvs(self, _table_name, _where_keys , _where_vals ):
         sql = "delete from %s" %(_table_name)
-        sql += " where " + ' and '.join(map(lambda x, y: "%s='%s'" %(x, y), _where_keys, _where_vals))
+        sql += " where " + ' and '.join(map(lambda x, y: "%s='%s'" %(x, y) if isinstance(y, str) else "%s=%s" %(x, y), _where_keys, _where_vals))
         ret = self.execute_sql(sql)
         return ret
 
